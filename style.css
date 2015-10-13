@@ -1,0 +1,58 @@
+/* ========================================================================
+ * Section
+ * ======================================================================== */
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+}
+
+/* ========================================================================
+ * Section
+ * ======================================================================== */
+
+.table {
+  width: 100%;
+  max-width: 100%;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 1px solid #ddd;
+}
+.table > thead > tr > th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #ddd;
+}
+
+.table-bordered {
+  border: 1px solid #ddd;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+  border: 1px solid #ddd;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > thead > tr > td {
+  border-bottom-width: 2px;
+}
+
+td {
+  white-space: nowrap;
+}
+
+/* ========================================================================
+ * Section
+ * ======================================================================== */
