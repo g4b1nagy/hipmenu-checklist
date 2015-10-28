@@ -12,19 +12,23 @@ document.addEventListener('DOMContentLoaded', function() {
         tags = document.querySelectorAll('.history-item')[0];\
         tags = tags && tags.querySelectorAll('.content');\
         if (tags == undefined || tags.length == 0) {\
-          tags = document.querySelectorAll('.history-diners')[0].querySelectorAll('.content');\
+          tags = document.querySelectorAll('.history-diners')[0].querySelectorAll('.container-marginTBMedium');\
         }\
         for (i = 0; i < tags.length; i++) {\
           dinerNameDOMElement = tags[i].querySelector('h4');\
           dinerName = dinerNameDOMElement.innerText.trim();\
-          priceValueDOMElement = tags[i].querySelector('.simple-footer');\
+          priceValueDOMElement = tags[i].querySelector('footer').querySelectorAll('td');\
+          priceValueDOMElement = priceValueDOMElement && priceValueDOMElement[priceValueDOMElement.length - 1];\
           if (priceValueDOMElement != null) {\
             priceValue = priceValueDOMElement.innerHTML.trim();\
-            priceValue = priceValue.replace('Total ' + dinerName + ': ', '');\
           } else {\
-            priceValueDOMElement = tags[i].querySelector('footer').querySelectorAll('td');\
-            priceValueDOMElement = priceValueDOMElement[priceValueDOMElement.length - 1];\
-            priceValue = priceValueDOMElement.innerHTML.trim();\
+            priceValueDOMElement = tags[i].querySelector('.simple-footer');\
+            if (priceValueDOMElement != null) {\
+              priceValue = priceValueDOMElement.innerHTML.trim();\
+              priceValue = priceValue.replace('Total ' + dinerName + ': ', '');\
+            } else {\
+              priceValue = 0\
+            }\
           }\
           orders.push({\
             name: dinerName,\
