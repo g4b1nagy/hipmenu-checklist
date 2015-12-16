@@ -5,7 +5,7 @@ Turn a group order into an easy to manage checklist
 
 ### What's this? ###
 
-[hipmenu-checklist](https://chrome.google.com/webstore/detail/hipmenu-checklist/fdbmfcgckbobgefkgcbkdcjejcnoahag) is a Chrome extension that generates a checklist based on your hipMenu order page. It aims to solve the issue of keeping track of people who payed when dealing with large group orders.
+hipmenu-checklist is a Chrome extension that generates a checklist based on your hipMenu order page. It aims to solve the issue of keeping track of people who payed when dealing with large group orders. hipmenu-checklist is available on the [Chrome Web Store](https://chrome.google.com/webstore/detail/hipmenu-checklist/fdbmfcgckbobgefkgcbkdcjejcnoahag).
 
 ![hipmenu-checklist screenshot](https://raw.github.com/g4b1nagy/hipmenu-checklist/master/screenshot.png)
 
