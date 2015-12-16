@@ -2,110 +2,85 @@
  * Section
  * ======================================================================== */
 
+var orders = [];
+
 document.addEventListener('DOMContentLoaded', function() {
 
   // get orders from page
+
   chrome.tabs.executeScript(null, {
     code: "\
-      var orders = [], i, tags, dinerNameDOMElement, dinerName, priceValueDOMElement, priceValue;\
-      if (document.location.hash.startsWith('#history')) {\
-        tags = document.querySelectorAll('.history-item')[0];\
-        tags = tags && tags.querySelectorAll('.content');\
-        if (tags == undefined || tags.length == 0) {\
-          tags = document.querySelectorAll('.history-diners')[0].querySelectorAll('.container-marginTBMedium');\
-        }\
-        for (i = 0; i < tags.length; i++) {\
-          dinerNameDOMElement = tags[i].querySelector('h4');\
-          dinerName = dinerNameDOMElement.innerText.trim();\
-          priceValueDOMElement = tags[i].querySelector('footer').querySelectorAll('td');\
-          priceValueDOMElement = priceValueDOMElement && priceValueDOMElement[priceValueDOMElement.length - 1];\
-          if (priceValueDOMElement != null) {\
-            priceValue = priceValueDOMElement.innerHTML.trim();\
-          } else {\
-            priceValueDOMElement = tags[i].querySelector('.simple-footer');\
-            if (priceValueDOMElement != null) {\
-              priceValue = priceValueDOMElement.innerHTML.trim();\
-              priceValue = priceValue.replace('Total ' + dinerName + ': ', '');\
-            } else {\
-              priceValue = 0\
-            }\
-          }\
+      var orders = [];\
+      if (document.location.hash.indexOf('#history') == -1) {\
+        var my_name = document.querySelector('#h-profilename').textContent;\
+        var name_tags = document.querySelectorAll('h1');\
+        var order_tags = document.querySelectorAll('div.details');\
+        for (var i = 0; i < name_tags.length; i++) {\
+          var tds = order_tags[i].querySelectorAll('footer td');\
           orders.push({\
-            name: dinerName,\
-            price: priceValue\
+            name: name_tags[i].textContent.replace('Selecțiile mele', my_name).trim(),\
+            price: tds[tds.length - 1].textContent.trim(),\
           });\
         }\
       } else {\
-        var name_tags = document.querySelectorAll('h1');\
-        var price_tags = document.querySelectorAll('div.price');\
-        for (i = 0; i < name_tags.length; i++) {\
+        var order_tags = document.querySelectorAll('.container-marginTBMedium');\
+        for (var i = 1; i < order_tags.length; i++) {\
+          var tds = order_tags[i].querySelectorAll('footer td');\
           orders.push({\
-            name: name_tags[i].innerText.trim(),\
-            price: price_tags[i].innerText.trim()\
+            name: order_tags[i].querySelector('h4').textContent.trim(),\
+            price: tds[tds.length - 1].textContent.trim(),\
           });\
         }\
       }\
-      JSON.stringify(orders);"
+      JSON.stringify(orders);\
+    "
   }, function(orders) {
-    var html = '', i, j, checks, dinerName, pageURL, dinerKey;
-
     orders = JSON.parse(orders);
-    if (orders.length == 0) {
-      return;
-    }
     orders.sort(function(a, b) {
       var x = a.name.toLowerCase();
       var y = b.name.toLowerCase();
       return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 
-    chrome.tabs.executeScript(null, {
-      code: "document.location.hash"
-    }, function(data) {
-      pageURL = data;
+    // render the checklist
 
-      // render the checklist
-      for (i = 0; i < orders.length; i++) {
-        html = html + '<tr>';
-        html = html + '<td><label for="check' + i + '">' + orders[i].name + '</label></td>';
-        html = html + '<td><label for="check' + i + '">' + orders[i].price + '</label></td>';
-        html = html + '<td><input id="check' + i + '" type="checkbox" data-name="' + orders[i].name + '"' + (orders[i].payed ? ' checked ' : '') + '></td>';
-        html = html + '</tr>';
-      }
-
-      document.querySelector('tbody').innerHTML = html;
-
-      checks = document.querySelectorAll('td input');
-      for (i = 0; i < checks.length; i++) {
-        checks[i].addEventListener('click', function() {
-          dinerName = this.getAttribute('data-name');
-          dinerKey = dinerName + ":url:" + pageURL;
-          for (j = 0; j < orders.length; j++) {
-            if (orders[j].name == dinerName) {
-              orders[j].payed = this.checked;
-              chrome.tabs.executeScript(null, {
-                code: "sessionStorage.setItem('" + dinerKey + "', " + this.checked + ")"
-              });
-            }
+    var html = '';
+    for (var i = 0; i < orders.length; i++) {
+      html = html + '<tr>';
+      html = html + '<td><label for="check' + i + '">' + orders[i].name + '</label></td>';
+      html = html + '<td><label for="check' + i + '">' + orders[i].price + '</label></td>';
+      html = html + '<td><input id="check' + i + '" type="checkbox" data-name="' + orders[i].name + '"' + (orders[i].payed ? ' checked ' : '') + '></td>';
+      html = html + '</tr>';
+    }
+    document.querySelector('tbody').innerHTML = html;
+    var checks = document.querySelectorAll('td input');
+    for (var i = 0; i < checks.length; i++) {
+      checks[i].addEventListener('click', function(event) {
+        var name = this.getAttribute('data-name');
+        for (var j = 0; j < orders.length; j++) {
+          if (orders[j].name == name) {
+            orders[j].payed = this.checked;
+            chrome.tabs.executeScript(null, {
+              code: "sessionStorage.setItem('" + name + "', " + this.checked + ")"
+            });
           }
-        });
-      }
+        }
+      });
+    }
 
-      // get checkbox statuses from parent page
-      for (i = 0; i < orders.length; i++) {
-        dinerKey = orders[i].name + ":url:" + pageURL;
+    // get checkbox statuses from parent page
 
-        chrome.tabs.executeScript(null, {
-          code: i.toString() + " + ':' + sessionStorage.getItem('" + dinerKey + "')"
-        }, function(data) {
-          data = data[0].split(':');
-          var index = parseInt(data[0]);
-          var value = data[1] == 'true';
-          orders[index].payed = value;
-          document.querySelector('input[data-name="' + orders[index].name + '"]').checked = value;
-        });
-      }
-    });
+    for (var i = 0; i < orders.length; i++) {
+      chrome.tabs.executeScript(null, {
+        code: i.toString() + " + ':' + sessionStorage.getItem('" + orders[i].name + "')"
+      }, function(data) {
+        data = data[0].split(':');
+        var index = parseInt(data[0]);
+        var value = (data[1] == 'true' ? true : false);
+        orders[index].payed = value;
+        document.querySelector('input[data-name="' + orders[index].name + '"]').checked = value;
+      });
+    }
   });
 });
 
