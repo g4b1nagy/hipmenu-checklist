@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
           });\
         }\
       } else {\
-        var order_tags = document.querySelectorAll('.container-marginTBMedium');\
-        for (var i = 1; i < order_tags.length; i++) {\
+        var order_tags = document.querySelectorAll('.history-diners .container-marginTBMedium');\
+        for (var i = 0; i < order_tags.length; i++) {\
           var tds = order_tags[i].querySelectorAll('footer td');\
           orders.push({\
             name: order_tags[i].querySelector('h4').textContent.trim(),\
