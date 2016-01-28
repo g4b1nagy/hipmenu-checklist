@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
       html = html + '<tr>';
       html = html + '<td><label for="check' + i + '">' + orders[i].name + '</label></td>';
       html = html + '<td><label for="check' + i + '">' + orders[i].price + '</label></td>';
-      html = html + '<td><input id="check' + i + '" type="checkbox" data-name="' + orders[i].name + '"' + (orders[i].payed ? ' checked ' : '') + '></td>';
+      html = html + '<td><input id="check' + i + '" type="checkbox" data-name="' + orders[i].name + '"' + (orders[i].paid ? ' checked ' : '') + '></td>';
       html = html + '</tr>';
     }
     document.querySelector('tbody').innerHTML = html;
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var name = this.getAttribute('data-name');
         for (var j = 0; j < orders.length; j++) {
           if (orders[j].name == name) {
-            orders[j].payed = this.checked;
+            orders[j].paid = this.checked;
             chrome.tabs.executeScript(null, {
               code: "sessionStorage.setItem('" + name + "', " + this.checked + ")"
             });
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data = data[0].split(':');
         var index = parseInt(data[0]);
         var value = (data[1] == 'true' ? true : false);
-        orders[index].payed = value;
+        orders[index].paid = value;
         document.querySelector('input[data-name="' + orders[index].name + '"]').checked = value;
       });
     }
