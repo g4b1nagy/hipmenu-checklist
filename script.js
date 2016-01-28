@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
       JSON.stringify(orders);\
     "
   }, function(orders) {
+
+    // build the orders object
+
     orders = JSON.parse(orders);
     orders.sort(function(a, b) {
       var x = a.name.toLowerCase();
@@ -53,6 +56,9 @@ document.addEventListener('DOMContentLoaded', function() {
       html = html + '</tr>';
     }
     document.querySelector('tbody').innerHTML = html;
+
+    // add event listeners
+
     var checks = document.querySelectorAll('td input');
     for (var i = 0; i < checks.length; i++) {
       checks[i].addEventListener('click', function(event) {
@@ -62,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             chrome.tabs.executeScript(null, {
               code: "sessionStorage.setItem('" + name + "', " + this.checked + ")"
             });
+            syncState();
           }
         }
       });
@@ -69,16 +76,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // get checkbox statuses from parent page
 
-    for (var i = 0; i < orders.length; i++) {
-      chrome.tabs.executeScript(null, {
-        code: i.toString() + " + ':' + sessionStorage.getItem('" + orders[i].name + "')"
-      }, function(data) {
-        data = data[0].split(':');
-        var index = parseInt(data[0]);
-        var value = (data[1] == 'true' ? true : false);
-        document.querySelector('input[data-name="' + orders[index].name + '"]').checked = value;
-      });
+    function syncState() {
+      var total = 0;
+      for (var i = 0; i < orders.length; i++) {
+        chrome.tabs.executeScript(null, {
+          code: i.toString() + " + ':' + sessionStorage.getItem('" + orders[i].name + "')"
+        }, function(data) {
+          data = data[0].split(':');
+          var index = parseInt(data[0]);
+          var value = (data[1] == 'true' ? true : false);
+          document.querySelector('input[data-name="' + orders[index].name + '"]').checked = value;
+          total = total + (value ? parseFloat(orders[index].price) : 0);
+          document.querySelector('tfoot').innerHTML = '<tr class="brand"><td>Total adunat:</td><td colspan="2">' + total + '</td></tr>';
+        });
+      }
     }
+
+    syncState();
+
   });
 });
 
