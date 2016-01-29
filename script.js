@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var value = (data[1] == 'true' ? true : false);
           document.querySelector('input[data-name="' + orders[index].name + '"]').checked = value;
           total = total + (value ? parseFloat(orders[index].price) : 0);
-          document.querySelector('tfoot').innerHTML = '<tr class="brand"><td>Total adunat:</td><td colspan="2">' + total + '</td></tr>';
+          document.querySelector('tfoot').innerHTML = '<tr class="brand"><td>Total adunat:</td><td colspan="2">' + total.toFixed(2) + '</td></tr>';
         });
       }
     }
