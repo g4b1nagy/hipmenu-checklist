@@ -17,10 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var order_tags = document.querySelectorAll('div.details');\
         for (var i = 0; i < name_tags.length; i++) {\
           var tds = order_tags[i].querySelectorAll('footer td');\
-          orders.push({\
-            name: name_tags[i].textContent.replace('Selecțiile mele', my_name).trim(),\
-            price: tds[tds.length - 1].textContent.trim(),\
-          });\
+          if (tds.length > 0) {\
+            orders.push({\
+              name: name_tags[i].textContent.replace('Selecțiile mele', my_name).trim(),\
+              price: tds[tds.length - 1].textContent.trim(),\
+            });\
+          }\
         }\
       } else {\
         var order_tags = document.querySelectorAll('.history-diners .container-marginTBMedium');\
