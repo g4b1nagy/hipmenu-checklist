@@ -8,16 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
             var orders = [];\
             if (document.location.hash.indexOf('#history') == -1) {\
                 var my_name = document.querySelector('#h-profilename').textContent;\
-                var name_tags = document.querySelectorAll('h1');\
-                var order_tags = document.querySelectorAll('div.details');\
+                var name_tags = document.querySelectorAll('.container-white-rounded .header-left p');\
+                var price_tags = document.querySelectorAll('.container-white-rounded .summary-total .value');\
                 for (var i = 0; i < name_tags.length; i++) {\
-                    var tds = order_tags[i].querySelectorAll('footer td');\
-                    if (tds.length > 0) {\
-                        orders.push({\
-                            name: name_tags[i].textContent.replace('Selecțiile mele', my_name).trim(),\
-                            price: tds[tds.length - 1].textContent.trim(),\
-                        });\
-                    }\
+                    orders.push({\
+                        name: name_tags[i].textContent.replace('Selecțiile mele', my_name).trim(),\
+                        price: price_tags[i].textContent.trim(),\
+                    });\
                 }\
             } else {\
                 var order_tags = document.querySelectorAll('.history-diners .container-marginTBMedium');\
