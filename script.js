@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var name_value;\
                 for (var i = 0; i < name_tags.length; i++) {\
                     name_value = name_tags[i].textContent.replace('Selecțiile mele', my_name).trim();\
-                    name_value = (name_value.length > 20 ? name_value(0,17) + '...' : name_value)\
+                    name_value = (name_value.length > 20 ? name_value.substring(0,17) + '...' : name_value)\
                     orders.push({\
                         name: name_value,\
                         price: price_tags[i].textContent.trim(),\
