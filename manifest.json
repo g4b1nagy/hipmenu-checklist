@@ -1,7 +1,7 @@
 {
     "name": "hipMenu checklist",
     "description": "Turn a group order into an easy to manage checklist",
-    "version": "0.9.3",
+    "version": "0.9.4",
     "permissions": [
         "tabs", "http://www.hipmenu.ro/*", "https://www.hipmenu.ro/*"
     ],
