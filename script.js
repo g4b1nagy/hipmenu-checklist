@@ -13,9 +13,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (name_tags.length > price_tags.length) {\
                     name_tags.splice(0, 1);\
                 }\
+                var name_value;\
                 for (var i = 0; i < name_tags.length; i++) {\
+                    name_value = name_tags[i].textContent.replace('Selecțiile mele', my_name).trim();\
+                    name_value = (name_value.length > 20 ? name_value.substring(0,17) + '...' : name_value)\
                     orders.push({\
-                        name: name_tags[i].textContent.replace('Selecțiile mele', my_name).trim(),\
+                        name: name_value,\
                         price: price_tags[i].textContent.trim(),\
                     });\
                 }\
