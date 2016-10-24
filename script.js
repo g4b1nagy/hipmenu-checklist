@@ -26,8 +26,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 var order_tags = document.querySelectorAll('.history-diners .container-marginTBMedium');\
                 for (var i = 0; i < order_tags.length; i++) {\
                     var tds = order_tags[i].querySelectorAll('footer td');\
+                    name_value = order_tags[i].querySelector('h4').textContent.trim();\
+                    name_value = (name_value.length > 20 ? name_value.substring(0,17) + '...' : name_value);\
                     orders.push({\
-                        name: order_tags[i].querySelector('h4').textContent.trim(),\
+                        name: name_value ,\
                         price: tds[tds.length - 1].textContent.trim(),\
                     });\
                 }\
@@ -35,6 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
             JSON.stringify(orders);\
         "
     }, function(orders) {
+        var escape_html = function (text) {
+            var text_node = document.createTextNode(text);
+            var div = document.createElement('div');
+            div.appendChild(text_node);
+            return div.innerHTML;
+        };
 
         // build the orders object
         orders = JSON.parse(orders);
@@ -48,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var html = '';
         for (var i = 0; i < orders.length; i++) {
             html = html + '<tr>';
-            html = html + '<td><label for="check' + i + '">' + orders[i].name + '</label></td>';
+            html = html + '<td><label for="check' + i + '">' + escape_html(orders[i].name) + '</label></td>';
             html = html + '<td><label for="check' + i + '">' + orders[i].price + '</label></td>';
             html = html + '<td><input id="check' + i + '" type="checkbox" data-name="' + orders[i].name + '"></td>';
             html = html + '</tr>';
