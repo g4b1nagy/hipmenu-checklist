@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.tabs.executeScript(null, {
         code: "\
             var orders = [];\
+            var name_value;\
             if (document.location.hash.indexOf('#history') == -1) {\
                 var my_name = document.querySelector('#h-profilename').textContent;\
                 var name_tags = Array.prototype.slice.call(document.querySelectorAll('.container-white-rounded .header-left p'));\
@@ -13,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (name_tags.length > price_tags.length) {\
                     name_tags.splice(0, 1);\
                 }\
-                var name_value;\
                 for (var i = 0; i < name_tags.length; i++) {\
                     name_value = name_tags[i].textContent.replace('Selecțiile mele', my_name).trim();\
                     name_value = (name_value.length > 20 ? name_value.substring(0,17) + '...' : name_value);\
@@ -37,12 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
             JSON.stringify(orders);\
         "
     }, function(orders) {
-        var escape_html = function (text) {
-            var text_node = document.createTextNode(text);
-            var div = document.createElement('div');
-            div.appendChild(text_node);
-            return div.innerHTML;
-        };
 
         // build the orders object
         orders = JSON.parse(orders);
@@ -56,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var html = '';
         for (var i = 0; i < orders.length; i++) {
             html = html + '<tr>';
-            html = html + '<td><label for="check' + i + '">' + escape_html(orders[i].name) + '</label></td>';
+            html = html + '<td><label for="check' + i + '">' + html_escape(orders[i].name) + '</label></td>';
             html = html + '<td><label for="check' + i + '">' + orders[i].price + '</label></td>';
             html = html + '<td><input id="check' + i + '" type="checkbox" data-name="' + orders[i].name + '"></td>';
             html = html + '</tr>';
@@ -73,14 +67,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         chrome.tabs.executeScript(null, {
                             code: "sessionStorage.setItem('" + name + "', " + this.checked + ")"
                         });
-                        syncState();
+                        sync_state();
                     }
                 }
             });
         }
 
+        // turn text into HTML-safe text
+        function html_escape(text) {
+            var text_node = document.createTextNode(text);
+            var div = document.createElement('div');
+            div.appendChild(text_node);
+            return div.innerHTML;
+        };
+
         // get checkbox statuses from parent page
-        function syncState() {
+        function sync_state() {
             var total = 0;
             for (var i = 0; i < orders.length; i++) {
                 chrome.tabs.executeScript(null, {
@@ -96,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        syncState();
+        sync_state();
 
     });
 });
