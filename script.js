@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     name_value = order_tags[i].querySelector('h4').textContent.trim();\
                     name_value = (name_value.length > 20 ? name_value.substring(0,17) + '...' : name_value);\
                     orders.push({\
-                        name: name_value ,\
+                        name: name_value,\
                         price: tds[tds.length - 1].textContent.trim(),\
                     });\
                 }\
