@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
             var orders = [];\
             var name_value;\
             if (document.location.hash.indexOf('#history') == -1) {\
-                var my_name = document.querySelector('#h-profilename').textContent;\
+                var my_name = document.querySelector('#h-profilename');\
+                if (!my_name) my_name = document.querySelector('#hnew-profilename');\
+                my_name = my_name.textContent;\
                 var name_tags = Array.prototype.slice.call(document.querySelectorAll('.container-white-rounded .header-left p'));\
                 var price_tags = Array.prototype.slice.call(document.querySelectorAll('.container-white-rounded .summary-total .value'));\
                 if (name_tags.length > price_tags.length) {\
